@@ -2,7 +2,7 @@
 
 Scaffold the RideNow v3 service repository from scratch.
 
-**Stack:** TypeScript (strict mode, Node 20 LTS) · NestJS (backend API + WebSocket gateway) with Next.js for both the rider and driver web apps, in one pnpm/Turborepo workspace · PostgreSQL 16 + PostGIS, accessed via Drizzle ORM.
+**Stack:** TypeScript (strict mode, Node 20 LTS) · NestJS (backend API + WebSocket gateway) with Next.js for the driver web app (a matching rider app is planned but not yet scaffolded), in one pnpm/Turborepo workspace · PostgreSQL 16 + PostGIS, accessed via Drizzle ORM.
 
 ## Workspace layout
 
@@ -10,7 +10,7 @@ Scaffold the RideNow v3 service repository from scratch.
 ridenow-v3/
 ├── apps/
 │   ├── api/        NestJS backend — GET /healthz, Drizzle + PostGIS wiring
-│   ├── rider/      Next.js rider web app   (port 3000)
+│   ├── rider/      Next.js rider web app   (port 3000, planned — not in this PR)
 │   └── driver/     Next.js driver web app  (port 3002)
 ├── docker-compose.yml   Postgres 16 + PostGIS (postgis/postgis:16-3.4)
 ├── turbo.json           Turborepo task graph
@@ -19,7 +19,7 @@ ridenow-v3/
 └── .github/workflows/ci.yml   install · lint · typecheck · test · build
 ```
 
-The `api` runs on port 3001; `rider` on 3000; `driver` on 3002.
+The `api` runs on port 3001; `driver` on 3002. The `rider` app (port 3000) is planned but not yet part of this scaffold.
 
 ## Quickstart
 
@@ -28,7 +28,7 @@ The `api` runs on port 3001; `rider` on 3000; `driver` on 3002.
 cp .env.example .env
 pnpm install          # resolves deps and writes the committed pnpm-lock.yaml
 pnpm db:up            # Postgres 16 + PostGIS on localhost:5432
-pnpm dev              # api + rider + driver together (Turborepo)
+pnpm dev              # api + driver together (Turborepo; rider added later)
 ```
 
 ## Health check
@@ -44,7 +44,7 @@ curl -s http://localhost:3001/healthz
 
 | Command            | What it does                                      |
 | ------------------ | ------------------------------------------------- |
-| `pnpm dev`         | Run api + both web apps in watch mode via Turbo   |
+| `pnpm dev`         | Run api + driver in watch mode via Turbo          |
 | `pnpm build`       | Build every package                               |
 | `pnpm lint`        | Lint every package                                |
 | `pnpm typecheck`   | `tsc --noEmit` across every package               |
