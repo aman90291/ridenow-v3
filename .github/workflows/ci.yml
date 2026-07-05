@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: install · lint · typecheck · test · build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          # `cache: pnpm` is re-enabled together with `--frozen-lockfile` below
+          # once pnpm-lock.yaml is committed — actions/setup-node hard-fails the
+          # cache step when no committed lockfile exists to key the cache on.
+
+      - name: Install dependencies
+        # Bootstrap scaffold PR: no pnpm-lock.yaml is committed yet, so this
+        # first install resolves the workspace and writes the lockfile. Once the
+        # generated pnpm-lock.yaml is committed, switch back to
+        # `pnpm install --frozen-lockfile` (and re-enable `cache: pnpm` above)
+        # to lock CI installs to the committed lockfile.
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Typecheck
+        run: pnpm run typecheck
+
+      - name: Test
+        run: pnpm run test
+
+      - name: Build
+        run: pnpm run build
