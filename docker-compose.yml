@@ -1,0 +1,20 @@
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    container_name: ridenow-db
+    environment:
+      POSTGRES_USER: ridenow
+      POSTGRES_PASSWORD: ridenow
+      POSTGRES_DB: ridenow
+    ports:
+      - "5432:5432"
+    volumes:
+      - ridenow-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ridenow -d ridenow"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  ridenow-pgdata:

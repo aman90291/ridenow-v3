@@ -1,0 +1,22 @@
+{
+  "name": "ridenow-v3",
+  "version": "0.0.0",
+  "private": true,
+  "description": "RideNow v3 — rider + driver ride-hailing service monorepo",
+  "packageManager": "pnpm@9.12.0",
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "db:up": "docker compose up -d db",
+    "db:down": "docker compose down"
+  },
+  "devDependencies": {
+    "turbo": "^2.1.0"
+  }
+}

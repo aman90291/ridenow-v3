@@ -25,10 +25,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: pnpm
+          # `cache: pnpm` is re-enabled together with `--frozen-lockfile` below
+          # once pnpm-lock.yaml is committed — actions/setup-node hard-fails the
+          # cache step when no committed lockfile exists to key the cache on.
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        # Bootstrap scaffold PR: no pnpm-lock.yaml is committed yet, so this
+        # first install resolves the workspace and writes the lockfile. Once the
+        # generated pnpm-lock.yaml is committed, switch back to
+        # `pnpm install --frozen-lockfile` (and re-enable `cache: pnpm` above)
+        # to lock CI installs to the committed lockfile.
+        run: pnpm install --no-frozen-lockfile
 
       - name: Lint
         run: pnpm run lint
